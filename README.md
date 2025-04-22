@@ -4,8 +4,11 @@
 
 
 # Playwright Web Scraping Examples (Python & Node.js)
+[![HasData_bannner](banner.png)](https://hasdata.com/)
 
 This repository contains practical web scraping examples using **[Playwright](https://playwright.dev/)** in both **Python** and **Node.js**. It’s organized to help you learn everything — from basics to advanced techniques.
+
+
 ## Table of Contents
 
 1. [Requirements](#requirements)
