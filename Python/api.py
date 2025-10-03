@@ -4,19 +4,15 @@ from playwright.async_api import async_playwright
 
 app = Flask(__name__)
 
-async def extract_content(url):
+# Async function to extract only visible text from a webpage
+async def extract_text(url):
     async with async_playwright() as p:
         browser = await p.chromium.launch(headless=True)
         page = await browser.new_page()
-        await page.goto(url)
-        # Extract full text content; you can improve extraction as needed
-        content = await page.content()      # HTML
-        text = await page.inner_text("body") # Main visible text
+        await page.goto(url, wait_until="domcontentloaded")
+        text = await page.inner_text("body")  # Main visible content
         await browser.close()
-    return {
-        "text": text,
-        "html": content
-    }
+    return text
 
 @app.route('/extract', methods=['POST'])
 def extract():
@@ -25,8 +21,11 @@ def extract():
     if not url:
         return jsonify({"error": "No URL provided"}), 400
     try:
-        result = asyncio.run(extract_content(url))
-        return jsonify(result)
+        result = asyncio.run(extract_text(url))
+        # Return non-empty visible text as 'content'
+        if not result or not result.strip():
+            return jsonify({"error": "No content found"}), 204
+        return jsonify({"content": result.strip()})
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
