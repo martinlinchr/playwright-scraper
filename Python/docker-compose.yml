@@ -1,6 +1,6 @@
 services:
   playwright-scraper:
-    build: .
+    build: ./Python
     container_name: playwright-scraper
     restart: unless-stopped
     environment:
@@ -14,7 +14,6 @@ services:
       - "traefik.http.routers.playwrightscraper.entrypoints=websecure"
       - "traefik.http.routers.playwrightscraper.tls.certresolver=letsencrypt"
       - "traefik.http.services.playwrightscraper.loadbalancer.server.port=8000"
-    # Expose port internally, not to host
     expose:
       - 8000
 networks:
